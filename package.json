@@ -1,0 +1,38 @@
+{
+  "name": "jewelry-configurator",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
+    "@react-three/drei": "9.108.3",
+    "@react-three/fiber": "8.16.2",
+    "@react-three/postprocessing": "2.16.1",
+    "@react-three/rapier": "1.5.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "2.1.1",
+    "lucide-react": "0.471.0",
+    "next": "14.2.10",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "tailwind-merge": "2.5.2",
+    "three": "0.165.0",
+    "zod": "^4.1.12",
+    "zustand": "4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.12",
+    "@types/react": "18.3.7",
+    "@types/react-dom": "18.3.0",
+    "autoprefixer": "10.4.20",
+    "eslint": "9.11.1",
+    "postcss": "8.4.47",
+    "tailwindcss": "3.4.13",
+    "typescript": "5.6.2"
+  }
+}

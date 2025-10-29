@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light dark; }
+html, body { height: 100%; }
+.canvas-wrap { @apply relative w-full h-full bg-[#0b1624]; }
+
+/* (optional) subtle vignette, uncomment if you want a cinematic look */
+/*
+.canvas-wrap::after {
+  content: "";
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 120% at 50% 20%, transparent 40%, rgba(0,0,0,0.25) 100%);
+}
+*/
