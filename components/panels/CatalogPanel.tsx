@@ -17,7 +17,7 @@ export function CatalogPanel() {
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between rounded-2xl px-4 py-3 "
       >
-        <h3 className="font-semibold">Catalog</h3>
+        <h3 className="font-semibold">Katalog elementów</h3>
         <ChevronDown
           className={`h-5 w-5 transition-transform duration-300 ${
             open ? "rotate-180" : ""
@@ -71,7 +71,7 @@ export function CatalogPanel() {
                 size="sm"
                 onClick={() => layerId && addBead(d.id, layerId, 20)}
               >
-                Add
+                Dodaj
               </Button>
             </Card>
           ))}

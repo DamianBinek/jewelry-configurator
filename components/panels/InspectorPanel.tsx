@@ -26,7 +26,7 @@ export function InspectorPanel() {
         className="w-full flex items-center justify-between rounded-2xl px-4 py-3"
         aria-expanded={open}
       >
-        <h3 className="font-semibold">Details</h3>
+        <h3 className="font-semibold">Szczegóły</h3>
         <ChevronDown
           className={`h-5 w-5 transition-transform duration-300 ${
             open ? "rotate-180" : ""
@@ -47,21 +47,19 @@ export function InspectorPanel() {
             {/* <h4 className="font-semibold">Selected bead</h4> */}
             {!bead ? (
               <div className="text-sm text-zinc-500">
-                Select a bead on the scene or from the list below…
+                Wybierz element na naszyjniku lub z listy poniżej...
               </div>
             ) : (
               <div className="space-y-2">
                 <div className="text-sm">
                   ID: <span className="font-mono">{bead.id.slice(0, 8)}</span>
                 </div>
-                <div className="text-sm">
-                  Position: {bead.sMm.toFixed(1)} mm
-                </div>
+                <div className="text-sm">Pozycja: {bead.sMm.toFixed(1)} mm</div>
                 <Button
                   variant="destructive"
                   onClick={() => removeBead(bead.id)}
                 >
-                  Remove
+                  Usuń
                 </Button>
               </div>
             )}
@@ -82,7 +80,7 @@ export function InspectorPanel() {
                       key={b.id}
                       className={`p-3 flex items-center justify-between cursor-pointer transition rounded-2xl bg-transparent backdrop-blur shadow-lg border-none ${
                         isActive
-                          ? "ring-2 ring-brand-500"
+                          ? "border-solid border-yellow-500"
                           : "hover:bg-zinc-50/5"
                       }`}
                       onClick={() => selectBead(b.id)}

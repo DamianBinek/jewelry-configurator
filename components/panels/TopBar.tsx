@@ -275,7 +275,7 @@ export function TopBar() {
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between rounded-2xl px-4 py-3 "
       >
-        <h3 className="font-semibold">Actions</h3>
+        <h3 className="font-semibold">Opcje</h3>
         <ChevronDown
           className={`h-5 w-5 transition-transform duration-300 ${
             open ? "rotate-180" : ""
@@ -290,42 +290,27 @@ export function TopBar() {
         }`}
       >
         <div className="p-4 pt-3 space-y-3 overflow-y-auto max-h-80 flex flex-col">
-          {defs[0] && layers[0] && (
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={() =>
-                addBead(defs[0].id, layers[0].id, layers[0].lengthMm / 2)
-              }
-            >
-              Add sample bead
-            </Button>
-          )}
-
           <Button
             size="sm"
-            variant="secondary"
             onClick={() => setLockCamera(!lockCamera)}
             title="Lock / unlock orbit controls"
           >
-            {lockCamera ? "Unlock view" : "Lock view"}
+            {lockCamera ? "Odblokuj widok" : "Zablokuj widok"}
           </Button>
           {/* Export / Import / Link / PNG */}
           <Button
             size="sm"
-            variant="secondary"
             onClick={handleExport}
             title="Export current necklace to JSON"
           >
-            Export JSON
+            Eksportuj
           </Button>
           <Button
             size="sm"
-            variant="secondary"
             onClick={handleImportClick}
             title="Import necklace from JSON"
           >
-            Import JSON
+            Importuj
           </Button>
           <input
             ref={fileInputRef}
@@ -336,26 +321,16 @@ export function TopBar() {
           />
           <Button
             size="sm"
-            variant="secondary"
             onClick={handleCopyLink}
             title="Copy permalink with config"
           >
-            Copy link
+            Kopiuj link
           </Button>
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={handleSavePng}
-            title="Save PNG preview"
-          >
-            Save PNG
+          <Button size="sm" onClick={handleSavePng} title="Save PNG preview">
+            Zapisz obraz
           </Button>
 
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={() => window.location.reload()}
-          >
+          <Button size="sm" onClick={() => window.location.reload()}>
             Reset
           </Button>
         </div>

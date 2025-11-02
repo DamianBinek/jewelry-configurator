@@ -5,6 +5,7 @@ import { TopBar } from "@/components/panels/TopBar";
 import { CatalogPanel } from "@/components/panels/CatalogPanel";
 import { InspectorPanel } from "@/components/panels/InspectorPanel";
 import { usePrice } from "@/components/pricing/pricing";
+import { TitleField } from "@/components/ui/TitleField";
 
 const SceneCanvas = dynamic(() => import("@/components/scene/SceneCanvas"), {
   ssr: false,
@@ -32,10 +33,11 @@ export default function ConfiguratorPage() {
         <div className="flex items-start justify-between p-4 md:p-6">
           <div className="pointer-events-auto select-none">
             <h1 className="text-white/95 drop-shadow text-2xl md:text-3xl font-semibold">
-              My Necklace
+              <TitleField />
             </h1>
             <div className="text-white/80 text-sm mt-1">
-              Total: <span className="font-semibold">${price.toFixed(2)}</span>
+              Orientacyjny koszt:{" "}
+              <span className="font-semibold">${price.toFixed(2)}</span>
             </div>
           </div>
         </div>

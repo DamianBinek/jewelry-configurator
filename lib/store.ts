@@ -5,6 +5,7 @@ export type LayerId = string;
 
 export interface NecklaceConfig {
   version: 1;
+  title: string;
   layers: Layer[];
   beads: BeadInstance[];
   // opcjonalnie: podgląd PNG
@@ -44,6 +45,7 @@ export interface BeadInstance {
 }
 
 interface AppState {
+  title: string;
   layers: Layer[];
   beads: BeadInstance[];
   defs: BeadDef[];
@@ -51,6 +53,7 @@ interface AppState {
   gapMm: number;           // minimalny odstęp
   lockCamera: boolean;     // 🔒 nowość
 
+  setTitle: (title: string) => void; 
   addBead: (defId: string, layer: LayerId, sMm: number) => void;
   moveBead: (id: string, sMm: number) => void;
   removeBead: (id: string) => void;
@@ -65,10 +68,13 @@ interface AppState {
 
 export const useApp = create<AppState>((set, get) => ({
   layers: [],
+  title: 'My Necklace',
   beads: [],
   defs: [],
   gapMm: 0, //odstęp między koralikami
   lockCamera: false, // ustaw na true, jeśli chcesz startowo zablokowaną kamerę
+
+  setTitle: (title) => set({ title: title }),
 
   addBead: (defId, layer, sMm) =>
     set((state) => ({
@@ -102,6 +108,7 @@ export const useApp = create<AppState>((set, get) => ({
 
   loadDefaults: () =>
     set(() => ({
+      title: 'My Necklace',
       layers: [{ id: "L1", name: "Layer 1", lengthMm: 420, cordMaterial: "nylon", cordPrice: 15 }],
       defs: [
         { id: "metal_ball", name: "Metal Ball 6mm", geometryUrl: "__primitive__/sphere6", beadPreview: "https://png.pngtree.com/png-vector/20250110/ourmid/pngtree-natural-blue-turquoise-gemstone-with-dark-veins-for-jewelry-making-and-png-image_15129112.png", materialKind: "metal", price: 2, baseDiameterMm: 6 },
@@ -111,12 +118,13 @@ export const useApp = create<AppState>((set, get) => ({
       beads: [],
     })),
     getConfig: () => {
-      const { layers, beads } = get();
-      return { version: 1, layers, beads };
+      const { title, layers, beads } = get();
+      return { version: 1, title, layers, beads };
     },
   
     loadConfig: (cfg) =>
       set(() => ({
+        title: cfg.title,
         layers: cfg.layers,
         beads: cfg.beads,
         // defs zostają bez zmian – import używa istniejących defId z katalogu
