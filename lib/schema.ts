@@ -20,6 +20,7 @@ export const LayerSchema = z.object({
 
 export const NecklaceConfigSchema = z.object({
   version: z.literal(1),
+  title: z.string(),
   layers: z.array(LayerSchema),
   beads: z.array(BeadInstanceSchema),
   previewDataUrl: z.string().url().optional(),
