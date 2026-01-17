@@ -22,7 +22,7 @@ export default function SceneCanvas() {
         toneMapping: THREE.ACESFilmicToneMapping,
         outputColorSpace: THREE.SRGBColorSpace,
       }}
-      camera={{ position: [0, 0.08, 0.32], fov: 40 }}
+      camera={{ position: [0, 0, 0.32], fov: 40 }}
     >
       <color attach="background" args={["#0f172a"]} />
       <ambientLight intensity={0.35} />
@@ -30,7 +30,7 @@ export default function SceneCanvas() {
       <Environment preset="studio" background={false} />
 
       {layers.map((l) => (
-        <NecklaceCurve key={l.id} layer={l} />
+        <NecklaceCurve key={l.id} layer={l} aspect={1.15} />
       ))}
 
       {beads.map((b) => (
@@ -40,6 +40,7 @@ export default function SceneCanvas() {
       <DragController />
       {/* 🔒 kontrola blokady kamery */}
       <OrbitControls
+        target={[0, 0, 0]}
         enabled={!lockCamera}
         enablePan={false}
         minDistance={0.18}

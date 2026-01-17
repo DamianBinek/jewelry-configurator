@@ -2,7 +2,7 @@
 import { useMemo } from "react";
 import * as THREE from "three";
 import { BeadInstance, useApp } from "@/lib/store";
-import { arcLengthAtT, createLayerCurve } from "@/lib/curves";
+import { createOvalCurve, sMmToT } from "@/lib/curves";
 import { createGlassMaterial, createMetalMaterial } from "@/lib/materials";
 import { Billboard } from "@react-three/drei";
 
@@ -19,9 +19,9 @@ export default function Bead({ bead }: { bead: BeadInstance }) {
   const layer = layers.find((l) => l.id === bead.layer)!;
 
   const { position, orientation } = useMemo(() => {
-    const curve = createLayerCurve(layer.lengthMm);
-    const totalLenM = arcLengthAtT(curve, 1);
-    const t = bead.sMm / 1000 / totalLenM;
+    const curve = createOvalCurve(layer.lengthMm);
+    const t = sMmToT(curve, bead.sMm);
+
     const pos = curve.getPoint(t);
     const tangent = curve.getTangent(t);
     const quat = new THREE.Quaternion();

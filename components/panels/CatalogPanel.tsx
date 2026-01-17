@@ -1,17 +1,34 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useApp } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ChevronDown } from "lucide-react";
 
 export function CatalogPanel() {
-  const { defs, layers, addBead } = useApp();
+  const { defs, layers, addBead, lastError } = useApp();
   const layerId = layers[0]?.id;
   const [open, setOpen] = useState(true);
+  const [displayError, setDisplayError] = useState<string | null>(null);
+
+  // Show error message for 3 seconds
+  useEffect(() => {
+    if (lastError) {
+      setDisplayError(lastError);
+      const timer = setTimeout(() => setDisplayError(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [lastError]);
 
   return (
     <div className="text-white">
+      {/* Error message */}
+      {displayError && (
+        <div className="mb-3 p-3 rounded-lg bg-red-500/20 border border-red-500/50 text-red-200 text-sm">
+          {displayError}
+        </div>
+      )}
+
       {/* Header */}
       <button
         onClick={() => setOpen(!open)}
@@ -69,7 +86,7 @@ export function CatalogPanel() {
               {/* Right: action */}
               <Button
                 size="sm"
-                onClick={() => layerId && addBead(d.id, layerId, 20)}
+                onClick={() => layerId && addBead(d.id, layerId)}
               >
                 Dodaj
               </Button>

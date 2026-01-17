@@ -36,6 +36,8 @@ export function TitleField() {
           group-hover:border-white/40 focus:border-white/70
           transition
           drop-shadow
+          text-center
+          sm:text-left
         "
       />
     </div>

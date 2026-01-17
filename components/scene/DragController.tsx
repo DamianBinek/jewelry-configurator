@@ -3,7 +3,12 @@ import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useRef, useState, useEffect } from "react";
 import { useApp } from "@/lib/store";
-import { arcLengthAtT, closestTOnCurve, createLayerCurve } from "@/lib/curves";
+import {
+  arcLengthAtT,
+  closestTOnCurve,
+  createOvalCurve,
+  sMmToT,
+} from "@/lib/curves";
 
 export default function DragController() {
   const { camera, scene, gl } = useThree();
@@ -25,9 +30,8 @@ export default function DragController() {
     let closest: { id: string; dist: number } | null = null;
     for (const b of beads) {
       const layer = layers.find((l) => l.id === b.layer)!;
-      const curve = createLayerCurve(layer.lengthMm);
-      const totalLenM = arcLengthAtT(curve, 1);
-      const t = b.sMm / 1000 / totalLenM;
+      const curve = createOvalCurve(layer.lengthMm);
+      const t = sMmToT(curve, b.sMm);
       const p = curve.getPoint(t);
       const d = p.distanceTo(hit.point);
       if (!closest || d < closest.dist) closest = { id: b.id, dist: d };
@@ -35,11 +39,16 @@ export default function DragController() {
     if (closest && closest.dist < 0.03) {
       setDragId(closest.id);
       selectBead(closest.id);
+      e.preventDefault();
+      e.stopPropagation();
     }
   }
 
   function onPointerMove(e: PointerEvent) {
     if (!dragId) return;
+
+    e.preventDefault();
+    e.stopPropagation();
 
     const el = gl.domElement;
     const rect = el.getBoundingClientRect();
@@ -54,7 +63,7 @@ export default function DragController() {
 
     const bead = beads.find((b) => b.id === dragId)!;
     const layer = layers.find((l) => l.id === bead.layer)!;
-    const curve = createLayerCurve(layer.lengthMm);
+    const curve = createOvalCurve(layer.lengthMm);
 
     // 1) Docelowe t i surowe s (mm) dla pozycji kursora
     const t = closestTOnCurve(curve, hitPoint, 120);
@@ -104,6 +113,12 @@ export default function DragController() {
       next && nextDef
         ? next.sMm - (nextDef.baseDiameterMm / 2 + rSelf) - VISUAL_BIAS_MM
         : layer.lengthMm;
+
+    // Check if there's any free space available
+    if (min > max) {
+      // No free space - don't move the bead
+      return;
+    }
 
     // 5) Klamrujemy i zapisujemy
     const sClamped = Math.max(min, Math.min(max, sRawMm));

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { createOvalCurve, findNextAvailablePosition } from "./curves";
 
 export type MaterialKind = "glass" | "gem" | "metal" | "wood";
 export type LayerId = string;
@@ -52,9 +53,10 @@ interface AppState {
   selectedBeadId?: string;
   gapMm: number;           // minimalny odstęp
   lockCamera: boolean;     // 🔒 nowość
+  lastError?: string;      // error message
 
   setTitle: (title: string) => void; 
-  addBead: (defId: string, layer: LayerId, sMm: number) => void;
+  addBead: (defId: string, layer: LayerId, sMm?: number) => void;
   moveBead: (id: string, sMm: number) => void;
   removeBead: (id: string) => void;
   selectBead: (id?: string) => void;
@@ -73,13 +75,58 @@ export const useApp = create<AppState>((set, get) => ({
   defs: [],
   gapMm: 0, //odstęp między koralikami
   lockCamera: false, // ustaw na true, jeśli chcesz startowo zablokowaną kamerę
+  lastError: undefined,
 
   setTitle: (title) => set({ title: title }),
 
   addBead: (defId, layer, sMm) =>
-    set((state) => ({
-      beads: [...state.beads, { id: crypto.randomUUID(), defId, layer, sMm }],
-    })),
+    set((state): Partial<AppState> => {
+      // Find the bead definition to get its size
+      const def = state.defs.find((d) => d.id === defId);
+      const beadSizeMm = def?.baseDiameterMm || 6; // Default 6mm if not found
+
+      // Find the layer to get its length
+      const layerObj = state.layers.find((l) => l.id === layer);
+      if (!layerObj) {
+        return {
+          lastError: "Layer not found",
+        };
+      }
+
+      // If sMm not provided, calculate the next available position
+      let finalSMm: number | null = sMm ?? null;
+      if (finalSMm === null) {
+        const curve = createOvalCurve(layerObj.lengthMm);
+        const existingBeadsOnLayer = state.beads
+          .filter((b) => b.layer === layer)
+          .map((b) => {
+            const beadDef = state.defs.find((d) => d.id === b.defId);
+            return {
+              sMm: b.sMm,
+              sizeMm: beadDef?.baseDiameterMm || 6,
+            };
+          });
+        finalSMm = findNextAvailablePosition(
+          curve,
+          existingBeadsOnLayer,
+          beadSizeMm,
+          state.gapMm,
+          0.14 // gapAngle from OvalCurve
+        );
+        
+        // Check if space is available
+        if (finalSMm === null) {
+          return {
+            lastError: "No space available on necklace for this bead",
+          };
+        }
+      }
+
+      return {
+        beads: [...state.beads, { id: crypto.randomUUID(), defId, layer, sMm: finalSMm }],
+        lastError: undefined,
+      };
+    }),
 
   moveBead: (id, sMm) =>
     set((state) => ({
